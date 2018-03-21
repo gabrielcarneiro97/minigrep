@@ -91,7 +91,7 @@ impl Grep {
             let chars = self.contents[coord.line].chars();
 
             for (i, _) in chars.enumerate() {
-                if (i == coord.col) {
+                if i == coord.col {
                     space_line.push('^');
                 } else {
                     space_line.push('-');
