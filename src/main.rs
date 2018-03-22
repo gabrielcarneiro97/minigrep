@@ -9,15 +9,51 @@ struct DataCoord {
     col: usize,
 }
 
+fn find(s: &str, query: &str) -> Option<usize> {
+
+    let string = s.to_string();
+    let query = query.to_string();
+
+    let string = string.chars().enumerate();
+    let mut query = query.chars();
+
+    let mut q_ch = query.next();
+
+    let mut beg : Option<usize> = None;
+
+    for (i, ch) in string {
+        if beg != None && Some(ch) != q_ch {
+            return None;
+        } else if Some(ch) == q_ch {
+            if beg == None {
+                beg = Some(i);
+            }
+            q_ch = query.next();
+
+            if q_ch == None {
+                return beg;
+            }
+        }
+    }
+
+    None
+}
+
 fn find_all(s: &str, query: &str, beg: usize) -> Vec<usize> {
     let mut ret : Vec<usize> = Vec::new();
-    let string = String::from(s);
 
-    match string.find(query) {
+    let string = s.to_string();
+
+    match find(s, query) {
         Some(d) => {
             ret.push(d + beg);
-            ret.append(&mut find_all(&string[d+1..], query, d+1+beg));
-            ret
+            match string.find(query) {
+                Some(t) => {
+                    ret.append(&mut find_all(&s[t+1..], query, d+1+beg));
+                    ret
+                },
+                None => ret
+            }
         },
         None => ret
     }
@@ -97,7 +133,7 @@ impl Grep {
                     space_line.push('-');
                 }
             }
-            println!("({}:{}):", coord.line, coord.col);
+            println!("({}:{}):", coord.line + 1, coord.col + 1);
             println!("{}", self.contents[coord.line]);
             println!("{}", space_line);
 
@@ -108,10 +144,11 @@ impl Grep {
 fn main() {
     let args: Vec<String> = env::args().collect();
     
-    let mut grep = Grep::find(&args);
+    // let mut grep = Grep::find(&args);
 
-    grep.find_data();
+    // grep.find_data();
 
-    grep.print_result();
+    // grep.print_result();
 
+    println!("{:?}", find("To tell your name the livelong day", "livelong"));
 }
