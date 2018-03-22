@@ -111,20 +111,7 @@ impl Grep {
                     col: col,
                 });
 
-                let mut space_line = String::new();
-
-                let chars = self.contents[i].chars();
-
-                for (i2, _) in chars.enumerate() {
-                    if i2 == col {
-                        space_line.push('^');
-                    } else {
-                        space_line.push('-');
-                    }
-                }
-                println!("({}:{}):", i + 1, col + 1);
-                println!("{}", self.contents[i]);
-                println!("{}", space_line);
+                self.print_line(i, col);
             }
         }
 
@@ -158,22 +145,30 @@ impl Grep {
         let result = self.result.clone();
 
         for (_, coord) in result.iter().enumerate() {
-            let mut space_line = String::new();
+            self.print_line(coord.line, coord.col);
+        }
+    }
 
-            let chars = self.contents[coord.line].chars();
+    fn print_line(&self, line : usize, col : usize) {
+        let mut space_line = String::new();
+
+            let chars = self.contents[line].chars();
 
             for (i, _) in chars.enumerate() {
-                if i == coord.col {
+                if i == col {
                     space_line.push('^');
                 } else {
                     space_line.push('-');
                 }
             }
-            println!("({}:{}):", coord.line + 1, coord.col + 1);
-            println!("{}", self.contents[coord.line]);
-            println!("{}", space_line);
 
-        }
+            let pre_data = format!("({}:{}):", line + 1, col + 1);
+
+            let pre_space : String = pre_data.chars()
+                .map(|x| match x { _ => ' '}).collect();
+
+            println!("{} {}", pre_data, self.contents[line]);
+            println!("{} {}", pre_space, space_line);
     }
 }
 
