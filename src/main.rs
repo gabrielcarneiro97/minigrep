@@ -15,20 +15,22 @@ fn find(s: &str, query: &str) -> Option<usize> {
     let query = query.to_string();
 
     let string = string.chars().enumerate();
-    let mut query = query.chars();
+    let mut query_chars = query.chars();
 
-    let mut q_ch = query.next();
+    let mut q_ch = query_chars.next();
 
     let mut beg : Option<usize> = None;
 
     for (i, ch) in string {
         if beg != None && Some(ch) != q_ch {
-            return None;
+            beg = None;
+            query_chars = query.chars();
+            q_ch = query_chars.next();
         } else if Some(ch) == q_ch {
             if beg == None {
                 beg = Some(i);
             }
-            q_ch = query.next();
+            q_ch = query_chars.next();
 
             if q_ch == None {
                 return beg;
@@ -144,11 +146,10 @@ impl Grep {
 fn main() {
     let args: Vec<String> = env::args().collect();
     
-    // let mut grep = Grep::find(&args);
+    let mut grep = Grep::find(&args);
 
-    // grep.find_data();
+    grep.find_data();
 
-    // grep.print_result();
+    grep.print_result();
 
-    println!("{:?}", find("To tell your name the livelong day", "livelong"));
 }
