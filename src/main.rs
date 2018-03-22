@@ -2,7 +2,6 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 
-#[derive(Debug)]
 #[derive(Clone)]
 struct DataCoord {
     line: usize,
@@ -69,7 +68,7 @@ struct Grep {
 }
 
 impl Grep {
-    fn find(args: &[String]) -> Grep {
+    fn new(args: &[String]) -> Grep {
         let mut this = Grep {
             query: args[1].clone(),
             filename: args[2].clone(),
@@ -95,6 +94,41 @@ impl Grep {
         
         self.contents = contents.clone();
 
+    }
+
+    fn find_printing (&mut self) {
+        let contents = self.contents.clone();
+
+        let query = self.query.clone();
+
+        let mut is_here : Vec<DataCoord> = Vec::new();   
+
+        for (i, line) in contents.iter().enumerate() {
+            let appear = find_all(line, &query, 0);
+            for col in appear {
+                is_here.push(DataCoord {
+                    line: i,
+                    col: col,
+                });
+
+                let mut space_line = String::new();
+
+                let chars = self.contents[i].chars();
+
+                for (i2, _) in chars.enumerate() {
+                    if i2 == col {
+                        space_line.push('^');
+                    } else {
+                        space_line.push('-');
+                    }
+                }
+                println!("({}:{}):", i + 1, col + 1);
+                println!("{}", self.contents[i]);
+                println!("{}", space_line);
+            }
+        }
+
+        self.result = is_here.clone();
     }
 
     fn find_data (&mut self) -> Vec<DataCoord> {
@@ -146,10 +180,8 @@ impl Grep {
 fn main() {
     let args: Vec<String> = env::args().collect();
     
-    let mut grep = Grep::find(&args);
+    let mut grep = Grep::new(&args);
 
-    grep.find_data();
-
-    grep.print_result();
+    grep.find_printing();
 
 }
