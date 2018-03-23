@@ -3,6 +3,7 @@ mod finder;
 
 use std::fs::File;
 use std::io::prelude::*;
+use std::env::Args;
 
 use self::finder::find_all;
 use self::data_types::DataCoord;
@@ -15,21 +16,36 @@ pub struct Grep {
 }
 
 impl Grep {
-    pub fn new(args: &[String]) -> Grep {
+    pub fn new(mut args: Args) -> Grep {
+
+        args.next();
+
+        let query = match args.next() {
+            Some(v) => v,
+            None => panic!("Query string not found!"),
+        };
+
+        let filename = match args.next() {
+            Some(v) => v,
+            None => panic!("Filename string not found!")
+        };
+
         let mut this = Grep {
-            query: args[1].clone(),
-            filename: args[2].clone(),
+            query: query,
+            filename: filename,
             contents: Vec::new(),
             result: Vec::new()
         };
 
         this.read_file();
 
+        println!("\n\t GREP\n\t looking for '{}' at '{}'\n", &this.query, &this.filename);
+
         this
     }
     pub fn read_file (&mut self) {
 
-        let filename = self.filename.clone();
+        let filename = &self.filename;
 
         let mut f = File::open(filename).expect("file not found");;
 
@@ -39,14 +55,14 @@ impl Grep {
 
         let contents : Vec<String> = contents.split('\n').map(|s| s.to_string()).collect();
         
-        self.contents = contents.clone();
+        self.contents = contents;
 
     }
 
     pub fn find_printing (&mut self) {
-        let contents = self.contents.clone();
+        let contents = &self.contents;
 
-        let query = self.query.clone();
+        let query = &self.query;
 
         let mut is_here : Vec<DataCoord> = Vec::new();   
 
@@ -62,14 +78,14 @@ impl Grep {
             }
         }
 
-        self.result = is_here.clone();
+        self.result = is_here;
     }
 
-    pub fn find_data (&mut self) -> Vec<DataCoord> {
+    pub fn find_data (&mut self) {
 
-        let contents = self.contents.clone();
+        let contents = &self.contents;
 
-        let query = self.query.clone();
+        let query = &self.query;
 
         let mut is_here : Vec<DataCoord> = Vec::new();   
 
@@ -83,13 +99,12 @@ impl Grep {
             }
         }
 
-        self.result = is_here.clone();
+        self.result = is_here;
 
-        is_here
     }
 
     pub fn print_result(&self) {
-        let result = self.result.clone();
+        let result = &self.result;
 
         for (_, coord) in result.iter().enumerate() {
             self.print_line(coord.line, coord.col);
