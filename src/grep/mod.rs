@@ -53,7 +53,7 @@ impl Grep {
 
         f.read_to_string(&mut contents).expect("something went wrong reading the file");
 
-        let contents : Vec<String> = contents.split('\n').map(|s| s.to_string()).collect();
+        let contents : Vec<String> = contents.lines().map(|s| String::from(s)).collect();
         
         self.contents = contents;
 
