@@ -8,6 +8,7 @@ use std::env::Args;
 use self::finder::find_all;
 use self::data_types::DataCoord;
 
+/// Struct that contains the data.
 pub struct Grep {
     query: String,
     filename: String,
@@ -16,6 +17,12 @@ pub struct Grep {
 }
 
 impl Grep {
+    /// Method that recives the arguments from the enviroment and creates the Grep.
+    /// 
+    /// # Example
+    /// ```
+    /// let mut grep = Grep::new(env::args());
+    /// ```
     pub fn new(mut args: Args) -> Grep {
 
         args.next();
@@ -43,7 +50,8 @@ impl Grep {
 
         this
     }
-    pub fn read_file (&mut self) {
+    /// Private method that reads the file from Grep.filename and converts it to a Vec<Strings>, each String has one line of the file.
+    fn read_file (&mut self) {
 
         let filename = &self.filename;
 
@@ -59,6 +67,7 @@ impl Grep {
 
     }
 
+    /// Method that search for the query and prints the line immediately after find, if finds. 
     pub fn find_printing (&mut self) {
         let contents = &self.contents;
 
@@ -81,6 +90,7 @@ impl Grep {
         self.result = is_here;
     }
 
+    /// Search for the query at the content and saves the result at result attribute.
     pub fn find_data (&mut self) {
 
         let contents = &self.contents;
@@ -103,6 +113,7 @@ impl Grep {
 
     }
 
+    /// Prints the result attribute formated.
     pub fn print_result(&self) {
         let result = &self.result;
 
@@ -111,6 +122,7 @@ impl Grep {
         }
     }
 
+    /// Private method to print one line.
     fn print_line(&self, line : usize, col : usize) {
         let mut space_line = String::new();
 

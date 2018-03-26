@@ -1,4 +1,13 @@
 
+/// Function that searches for a specific word in a str, it returns the index of first char.
+/// 
+/// # Example
+/// ```
+/// let s = "cool!";
+/// let index_of_c = find(s, "c");
+/// 
+/// assert_eq!(index_of_c, 0);
+/// ```
 fn find(s: &str, query: &str) -> Option<usize> {
 
     let string = s.to_string();
@@ -31,6 +40,16 @@ fn find(s: &str, query: &str) -> Option<usize> {
     None
 }
 
+/// Function that finds everytime that the query appears at string.
+/// 
+/// # Example
+/// ```
+/// let s = "cool!";
+/// let index_of_o = find_all(s, "o", 0);
+/// let expected : Vec<usize> = vec![1, 2];
+/// 
+/// assert_eq!(index_of_o, expected);
+/// ```
 pub fn find_all(s: &str, query: &str, beg: usize) -> Vec<usize> {
     let mut ret : Vec<usize> = Vec::new();
 
