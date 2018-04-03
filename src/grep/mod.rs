@@ -76,21 +76,31 @@ impl Grep {
         let mut is_here : Vec<DataCoord> = Vec::new();   
 
         for (i, line) in contents.iter().enumerate() {
-            let appear = find_all(line, &query, 0);
+            let appear = find_all(line, &query);
+            let mut counter = 0;
             for col in appear {
                 is_here.push(DataCoord {
                     line: i,
                     col: col,
                 });
 
-                self.print_line(i, col);
+                let sub = (query.len() - 1) as i32 * counter;
+                counter += 1;
+
+
+                if col as i32 - sub as i32 >= 0 {
+                    self.print_line(i, col - sub as usize);                    
+                } else {
+                    self.print_line(i, 0);
+                }
+                
             }
         }
 
         self.result = is_here;
     }
 
-    /// Search for the query at the content and saves the result at result attribute.
+    /// Search for the query on the content and saves the result at result attribute.
     pub fn find_data (&mut self) {
 
         let contents = &self.contents;
@@ -100,7 +110,7 @@ impl Grep {
         let mut is_here : Vec<DataCoord> = Vec::new();   
 
         for (i, line) in contents.iter().enumerate() {
-            let appear = find_all(line, &query, 0);
+            let appear = find_all(line, &query);
             for col in appear {
                 is_here.push(DataCoord {
                     line: i,
