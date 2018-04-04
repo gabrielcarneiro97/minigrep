@@ -136,14 +136,17 @@ impl Grep {
     fn print_line(&self, line : usize, col : usize) {
         let mut space_line = String::new();
 
-            let chars = self.contents[line].chars();
+            let chars = self.contents[line].char_indices();
 
-            for (i, _) in chars.enumerate() {
+            for (i, c) in chars.enumerate() {
+
                 if i == col {
                     space_line.push('^');
                 } else {
                     space_line.push('-');
                 }
+
+                // println!("{:?}, {}", c, col);
             }
 
             let pre_data = format!("({}:{}):", line + 1, col + 1);
