@@ -5,4 +5,6 @@ Implementação do grep (**g**lobally search a **r**egular **e**xpression and **
 Para compilar usar o comando ```cargo build --release```
 
 ## Uso
-```> minigrep [query] [filename]```
+```
+minigrep [query] [filename]
+```
