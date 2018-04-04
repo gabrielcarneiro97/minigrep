@@ -77,23 +77,14 @@ impl Grep {
 
         for (i, line) in contents.iter().enumerate() {
             let appear = find_all(line, &query);
-            let mut counter = 0;
+
             for col in appear {
                 is_here.push(DataCoord {
                     line: i,
                     col: col,
                 });
 
-                let sub = (query.len() - 1) as i32 * counter;
-                counter += 1;
-
-
-                if col as i32 - sub as i32 >= 0 {
-                    self.print_line(i, col - sub as usize);                    
-                } else {
-                    self.print_line(i, 0);
-                }
-                
+                self.print_line(i, col);                
             }
         }
 
@@ -138,18 +129,17 @@ impl Grep {
 
             let chars = self.contents[line].char_indices();
 
-            for (i, c) in chars.enumerate() {
+            for (_, c) in chars.enumerate() {
 
-                if i == col {
+                if c.0 == col {
                     space_line.push('^');
                 } else {
                     space_line.push('-');
                 }
 
-                // println!("{:?}, {}", c, col);
             }
 
-            let pre_data = format!("({}:{}):", line + 1, col + 1);
+            let pre_data = format!("line {}:", line + 1);
 
             let pre_space : String = pre_data.chars()
                 .map(|x| match x { _ => ' '}).collect();
