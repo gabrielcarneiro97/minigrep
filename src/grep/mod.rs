@@ -142,7 +142,7 @@ impl Grep {
             let pre_data = format!("line {}:", line + 1);
 
             let pre_space : String = pre_data.chars()
-                .map(|x| match x { _ => ' '}).collect();
+                .map(|_| ' ').collect();
 
             println!("{} {}", pre_data, self.contents[line]);
             println!("{} {}", pre_space, space_line);
